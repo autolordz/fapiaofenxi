@@ -14,17 +14,17 @@ for file_path in glob.glob(os.path.join(FILE_FOLDER,'*.pdf')):
             t1 = re.sub(r'([\u4e00-\u9fa5\u3000-\u303f\u3105-\u312f\u31a0-\u31bf\uff00-\uffef])\1{2,}',r'\1',t1)
 # 一般购销的两个公司名都会包含在这一行内容，**购 名称: xx公司 销 名称: xx公司**，这里用个条件兼容一些没有**名称**两字的，需要判断**购...销**
         if not '名称' in t1[t1.index('购'):t1.index('销')]:
-            print(re.findall(r'(?<=购|销)\s?[\u4e00-\u9fa5()（）]+', t1))
+            Firms = re.findall(r'(?<=购|销)\s?[\u4e00-\u9fa5()（）]+', t1)
         else:
-            print(re.findall(r'(?<=%s)\s?[\u4e00-\u9fa5()（）]+'%re.search(r'称\s*[\s:：]|$',t1).group(), t1))
+            Firms = re.findall(r'(?<=%s)\s?[\u4e00-\u9fa5()（）]+'%re.search(r'称\s*[\s:：]|$',t1).group(), t1)
 # 获取发票号码
         InvoiceCode = re.search(r'(?<=发票号码[:：]).*|(?<=发票号码 [:：]).*|$', t1).group().strip()
 # 获取金额，金额数字提取在**小写和¥￥**之后
         money1 = re.search(r'(?<=小写).*|$', t1).group().strip()
-        money1 = re.search(r'(?<=[¥￥]).*|$', money1).group().strip()
+        Money1 = re.search(r'(?<=[¥￥]).*|$', money1).group().strip()
 # 提取日期
         xx = re.search(r'(?<=日期).*日|$', t1).group().strip()
-        datestr1 = re.sub(r'[:：\s*]','',xx)
+        Datestr1 = re.sub(r'[:：\s*]','',xx)
 # 发票商品内容, 某些发票 截取内容从：纳税人识别号or身份证号.... 至：普通发票代码
         idx_t1 = re.search('纳税.{1}识别号',t1)
         if not idx_t1:
